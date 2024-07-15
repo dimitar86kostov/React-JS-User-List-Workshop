@@ -1,4 +1,72 @@
+import { useEffect, useState, useRef } from "react";
+
+const baseURL = "http://localhost:3030/jsonstore"
+
+
 export default function UserCreate({ onClose, onSave }) {
+
+    const [formValues, setFormValues] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        imageUrl: '',
+        country: '',
+        city: '',
+        street: '',
+        streetNumber: '',
+
+    });
+    
+    const inputRef = useRef();
+
+    useEffect(() => {
+        inputRef.current.focus();
+    }, []);
+
+    const changeFormHandler = (e) => {
+        console.log(e.target.name);
+        console.log(e.target.value);
+
+        setFormValues(oldValues => ({
+            ...oldValues,
+            [e.target.name]: e.target.value,
+        }))
+    };
+
+    async function addUserSaveHandler(e) {
+        // prevent refresh
+        e.preventDefault()
+
+        console.log(formValues);
+        // // get user data
+        // const formData = new FormData(e.currentTarget);
+        // const userData = {
+        //     ...Object.fromEntries(formData),
+        //     "createdAt": new Date().toISOString(),
+        //     "updatedAt": new Date().toISOString(),
+        // };
+
+        // make post request
+        const response = await fetch(`${baseURL}/users`, {
+            method: "POST",
+            headers: {
+                'Content-type': 'pplication-json'
+            },
+            body: JSON.stringify(formValues)
+        });
+
+        const createdUser = await response.json();
+
+        onSave(createdUser)
+
+        // // update local state
+        // setUsers(oldUsers => [...oldUsers, createdUser])
+
+        // // close modal
+        // setShowAddUser(false);
+    }
+
     return (
         <div className="overlay">
             <div className="backdrop" onClick={onClose}></div>
@@ -15,20 +83,33 @@ export default function UserCreate({ onClose, onSave }) {
                             </svg>
                         </button>
                     </header>
-                    <form onSubmit={onSave}>
+                    <form onSubmit={addUserSaveHandler}>
                         <div className="form-row">
                             <div className="form-group">
                                 <label htmlFor="firstName">First name</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-user"></i></span>
-                                    <input id="firstName" name="firstName" type="text" />
+                                    <input
+                                        id="firstName"
+                                        name="firstName"
+                                        type="text"
+                                        value={formValues.firstName}
+                                        onChange={changeFormHandler}
+                                    />
+
                                 </div>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="lastName">Last name</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-user"></i></span>
-                                    <input id="lastName" name="lastName" type="text" />
+                                    <input
+                                        id="lastName"
+                                        name="lastName"
+                                        type="text"
+                                        value={formValues.lastName}
+                                        onChange={changeFormHandler}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -38,14 +119,26 @@ export default function UserCreate({ onClose, onSave }) {
                                 <label htmlFor="email">Email</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-envelope"></i></span>
-                                    <input id="email" name="email" type="text" />
+                                    <input
+                                        id="email"
+                                        name="email"
+                                        type="text"
+                                        value={formValues.email}
+                                        onChange={changeFormHandler}
+                                    />
                                 </div>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="phoneNumber">Phone number</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-phone"></i></span>
-                                    <input id="phoneNumber" name="phoneNumber" type="text" />
+                                    <input
+                                        id="phoneNumber"
+                                        name="phoneNumber"
+                                        type="text"
+                                        value={formValues.phoneNumber}
+                                        onChange={changeFormHandler}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -54,7 +147,13 @@ export default function UserCreate({ onClose, onSave }) {
                             <label htmlFor="imageUrl">Image Url</label>
                             <div className="input-wrapper">
                                 <span><i className="fa-solid fa-image"></i></span>
-                                <input id="imageUrl" name="imageUrl" type="text" />
+                                <input
+                                    id="imageUrl"
+                                    name="imageUrl"
+                                    type="text"
+                                    value={formValues.imageUrl}
+                                    onChange={changeFormHandler}
+                                />
                             </div>
                         </div>
 
@@ -63,14 +162,27 @@ export default function UserCreate({ onClose, onSave }) {
                                 <label htmlFor="country">Country</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-map"></i></span>
-                                    <input id="country" name="country" type="text" />
+                                    <input
+                                        id="country"
+                                        name="country"
+                                        type="text"
+                                        value={formValues.country}
+                                        onChange={changeFormHandler}
+                                    />
                                 </div>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="city">City</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-city"></i></span>
-                                    <input id="city" name="city" type="text" />
+                                    <input
+                                        id="city"
+                                        ref={inputRef}
+                                        name="city"
+                                        type="text"
+                                        value={formValues.city}
+                                        onChange={changeFormHandler}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -80,14 +192,26 @@ export default function UserCreate({ onClose, onSave }) {
                                 <label htmlFor="street">Street</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-map"></i></span>
-                                    <input id="street" name="street" type="text" />
+                                    <input
+                                        id="street"
+                                        name="street"
+                                        type="text"
+                                        value={formValues.street}
+                                        onChange={changeFormHandler}
+                                    />
                                 </div>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="streetNumber">Street number</label>
                                 <div className="input-wrapper">
                                     <span><i className="fa-solid fa-house-chimney"></i></span>
-                                    <input id="streetNumber" name="streetNumber" type="text" />
+                                    <input
+                                        id="streetNumber"
+                                        name="streetNumber"
+                                        type="text"
+                                        value={formValues.streetNumber}
+                                        onChange={changeFormHandler}
+                                    />
                                 </div>
                             </div>
                         </div>

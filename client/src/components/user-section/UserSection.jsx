@@ -23,6 +23,7 @@ export default function UserSection(props) {
                 const response = await fetch(`${baseURL}/users`);
                 const result = await response.json();
                 const data = Object.values(result);
+                console.log(data);
                 setUsers(data);
             } catch (err) {
                 console.error(err.message);
@@ -41,29 +42,8 @@ export default function UserSection(props) {
         setShowAddUser(false);
     }
 
-    async function addUserSaveHandler(e) {
-        // prevent refresh
-        e.preventDefault()
-
-        // get user data
-        const formData = new FormData(e.currentTarget);
-        const userData = {
-            ...Object.fromEntries(formData),
-            "createdAt": new Date().toISOString(),
-            "updatedAt": new Date().toISOString(),
-        };
-
-        // make post request
-        const response = await fetch(`${baseURL}/users`, {
-            method: "POST",
-            headers: {
-                'Content-type': 'pplication-json'
-            },
-            body: JSON.stringify(userData)
-        });
-
-        const createdUser = await response.json();
-
+    async function userSaveHandler(createdUser) {
+       
         // update local state
         setUsers(oldUsers => [...oldUsers, createdUser])
 
@@ -93,10 +73,6 @@ export default function UserSection(props) {
         setDeleteUserState(null);
     }
 
-    const onLoading = () => {
-
-    }
-
     return (
         <section className="card users-container">
 
@@ -113,7 +89,7 @@ export default function UserSection(props) {
 
             {showAddUser && (<UserCreate
                 onClose={addUserCloseHandler}
-                onSave={addUserSaveHandler}
+                onSave={userSaveHandler}
             />)}
 
             {showDetails && <UserDetails
